@@ -34,6 +34,12 @@ class Game:
                     pygame.quit()
                     exit()
                 
+                keys = pygame.key.get_pressed()
+
+                if keys[pygame.K_q]:
+                    pygame.quit()
+                    exit()
+                
                 self.display_surface.blit(test_surface, (0,0))
             
                 test_entity_sprite.draw(self.display_surface)
