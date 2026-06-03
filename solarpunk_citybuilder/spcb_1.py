@@ -9,6 +9,11 @@ import numpy as np
 
 
 def choose(n):
+    """
+    An user input based choice selector. 
+    argument 'n' sets the number of possible choices
+    does not move forward until a valid choice is made (e.g. 1, 2, or 3 in a 3 choice scenario)
+    """
     y = True
     while y == True:
         x = input("choice: ")
@@ -22,6 +27,18 @@ def choose(n):
     return int(x)
 
 def make_project_proposal(n_committed, n_needed, proj_type, res_req):
+    """
+    a half baked idea for how to implement planning new things
+    I think the idea is that it could be applied to any type of project and that we would need to define what types of projects there are:
+    project types: (?)
+    - Building 
+    - Resource 
+    - Science 
+    - Art 
+
+    Once you create a project proposal, that goes into convincing people to collaborate??
+    Would be called during dialogue with other community members and influence social interaction?
+    """
     project_proposal = {
         'people committed': n_committed,
         'people needed': n_needed, 
@@ -32,6 +49,12 @@ def make_project_proposal(n_committed, n_needed, proj_type, res_req):
 
 
 def dialogue_navigator(n_folks, community_members, friend = 2, appeal = 4):
+    """
+    This turned into specifically being for asking people for help
+    Is only useful to demonstrate an idea of
+    - enter into dialgoue with some amount of people, and there is an outcome of that dialogue that affects the game
+    --- RNG values are just used to suggest that outcomes can change and should depend on the scenario
+    """
     rng = np.random.default_rng()
 
     folks = []
@@ -49,6 +72,19 @@ def dialogue_navigator(n_folks, community_members, friend = 2, appeal = 4):
     
 
 def propose_project(project_proposal, community_members, resources):
+    """
+    This is really the engine of this idea
+    people in the community can help you with your projects, 
+    your approach to getting help will affect the outcome 
+
+    the current two modes of operation are:
+    - BE CASUAL: enter into small talk and convince ppl one on one
+    --- current idea is that 1-on-1 convos are an easier way to get guaranteed success, though you cannot reach as many people
+    --- outcomes tend to be a few people helping out for most of the day
+    - BE BOLD: give a speech at the town center trying to convice ppl to help
+    --- asking everyone has reduced impact since its less personal but it can be rewarding, 
+    --- outcomes tend to range from nobody buys in to everyone buys in a little bit
+    """
     rng = np.random.default_rng()
     choices = ['BE CASUAL', 'BE BOLD']
     punctuation = ['.', '!']
