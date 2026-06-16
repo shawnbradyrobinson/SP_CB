@@ -1,4 +1,5 @@
 import Entity as Entity 
+import Person as Person 
 
 
 class Building(Entity):
@@ -8,6 +9,8 @@ class Building(Entity):
         self.height = height
         self.width = width
         self.materials_needed = materials_needed
+        self.person_capacity = 5 
+        self.person_slots = [] #a list of objects? or a dict? 
 
 
     #Placeholder for any given building's "thing" that happens on continuous update 
@@ -20,3 +23,14 @@ class Building(Entity):
         return True 
 
     pass
+
+    def addPerson(self, person: Person):
+        if len(self.person_slots) >= self.person_capacity:
+            print("BUILDING ALREADY FULL")
+            return 
+        else:
+            self.person_slots.append(person)
+            return 
+        
+    
+             
