@@ -8,6 +8,8 @@ class Person(Entity):
         self.age = 20
         #hunger level is 0-10...0 = full, 10= starving
         self.hunger_level = 0
+
+        self.thirst_level = 0 
         #injury state is 0-10... 0=none 10=fully incapacitated by injury
         self.injury_state = 0 
         #illness state is 0-10... 0=healthy 10= deathly ill 
@@ -24,9 +26,10 @@ class Person(Entity):
         #self.work_interest
         #self.personal_interest
 
-    def fullInit(self, age: int, hunger_level: int, injury_state: int, illness_state: int, vigor: int, overall_proficiency: int, inventory_preset: Inventory.Inventory): 
+    def fullInit(self, age: int, hunger_level: int, thirst_level: int, injury_state: int, illness_state: int, vigor: int, overall_proficiency: int, inventory_preset: Inventory.Inventory): 
         self.age = age
         self.hunger_level = hunger_level
+        self.thirst_level = thirst_level 
         self.injury_state = injury_state
         self.illness_state = illness_state
         self.vigor = vigor 
