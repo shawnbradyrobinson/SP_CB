@@ -2,6 +2,7 @@ import pygame as pygame
 import Entity as Entity 
 import EntitySprite as EntitySprite 
 import TimeSystem 
+import Universe 
 
 class Game: 
     
@@ -22,12 +23,12 @@ class Game:
         
         test_entity = Entity.Entity("first entity")
         test_entity_sprite = pygame.sprite.GroupSingle()
-        test_entity_sprite.add(EntitySprite.EntitySprite(test_entity, "green"))
+        test_entity_sprite.add(EntitySprite.EntitySprite(test_entity))
         
         
         second_entity = Entity.Entity("second!")
         second_entity_sprite = pygame.sprite.GroupSingle()
-        second_entity_sprite.add(EntitySprite.EntitySprite(second_entity, "orange", 300, 300))
+        second_entity_sprite.add(EntitySprite.EntitySprite(second_entity, "health_building_1", 300, 300))
 
 
 
@@ -37,6 +38,9 @@ class Game:
         counter = 0 
         delta_set = 1 
         
+        Universe.initBuildings()
+
+
         while True:
             # event loop 
             for event in pygame.event.get():
@@ -71,12 +75,39 @@ class Game:
             second_entity_sprite.update()
 
             self.TimeSys.nextInstant()
+            self.TimeSys.TickTickTick()
+
+            test_health_string = "HEALTH STAT UPDATED ON THE HOUR: " + str(Universe.TEST_HEALTH_STAT)
+            ths_display_surface = time_font.render(test_health_string, False, "Black")
+            self.display_surface.blit(ths_display_surface, (250, 250))
 
 
-            time_string = str(self.TimeSys.counter)
-            time_display_surface = time_font.render(time_string, False, "Black")
+
+            instants_string = str(self.TimeSys.counter)
+            time_display_surface = time_font.render(instants_string, False, "Black")
             self.display_surface.blit(time_display_surface, (1000, 15))
-                
+
+            hours_string = str(self.TimeSys.getHours())
+            hours_display_surface = time_font.render(hours_string, False, "Blue")
+            self.display_surface.blit(hours_display_surface, (1000, 30))
+
+            days_string = str(self.TimeSys.getDays())
+            days_display_surface = time_font.render(days_string, False, "Blue")
+            self.display_surface.blit(days_display_surface, (1000, 45))
+
+            months_string = str(self.TimeSys.getMonths())
+            months_display_surface = time_font.render(months_string, False, "Red")
+            self.display_surface.blit(months_display_surface, (1000, 60))
+
+
+            years_string = str(self.TimeSys.getYears())
+            years_display_surface = time_font.render(years_string, False, "Green")
+            self.display_surface.blit(years_display_surface, (1000, 75))
+
+
+
+
+            Universe.worldEffects(self.TimeSys)
             pygame.display.update()
                 
             self.dt = self.clock.tick(60) / 1000 #limits FPS to 60

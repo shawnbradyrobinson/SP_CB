@@ -1,10 +1,10 @@
-import Entity as Entity 
-import Inventory as Inventory
+from Entity import Entity 
+from Inventory import Inventory
 
 class Person(Entity):
     "Generic starting point for all persons"
     def __init__(self, person_name: str):
-        Entity.Entity.__init__(self, person_name)
+        Entity.__init__(self, person_name)
         self.age = 20
         #hunger level is 0-10...0 = full, 10= starving
         self.hunger_level = 0
@@ -21,7 +21,7 @@ class Person(Entity):
         # the funnel to which all minor proficiencys get converted...how GOOD 
         #are they at doing stuff?? 0 - 100 
         self.overall_proficiency = 50 
-        self.personal_inventory = Inventory.Inventory()
+        self.personal_inventory = Inventory()
 
         #self.work_interest
         #self.personal_interest
@@ -54,7 +54,7 @@ class Person(Entity):
     def changeVigor(self, new_vigor: int):
         self.vigor = new_vigor
 
-    def changeOverallProficiency(self, new_ovr: int)
+    def changeOverallProficiency(self, new_ovr: int): 
         self.overall_proficiency = new_ovr
 
     def getName(self):
@@ -77,3 +77,6 @@ class Person(Entity):
 
     def getOverallProficiency(self):
         return self.overall_proficiency
+    
+
+    

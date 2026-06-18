@@ -1,11 +1,11 @@
-import Entity as Entity 
-import Person as Person 
+from Entity import Entity 
+from Person import Person 
 
 
 class Building(Entity):
     "Generic starting point for all building types"
     def __init__(self, building_name: str, height: int, width: int, materials_needed: dict):
-        Entity.Entity.__init__(self, building_name)
+        Entity.__init__(self, building_name)
         self.height = height
         self.width = width
         self.materials_needed = materials_needed
