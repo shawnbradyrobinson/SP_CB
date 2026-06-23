@@ -22,6 +22,16 @@ class Inventory:
             },
 
             "food": {
+                #MEAL TYPES -- USED DIFFERENTLY THAN FOODS --# 
+                "malnourshing_meals": 0,
+                "protein_heavy_meals": 0,
+                "fatty_meals": 0,
+                "empty_carb_meals": 0,
+                "sweet_satisfying_meals": 0,
+                "savory_satisfying_meals": 0,
+                "sweet_savory_meals": 0,
+                "ultra_nutritious_meals": 0,
+                #
                 "eggs": 0,
                 "beef": 0,
                 "pork": 0,

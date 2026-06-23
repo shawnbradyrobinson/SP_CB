@@ -13,7 +13,8 @@
 #
 
 from TimeSystem import TimeSystem
-from HealthBuilding import HealthBuilding
+from Buildings.HealthBuilding import HealthBuilding
+from Buildings.Building import Building
 
 
 ## ========== SETTING UP LOTS OF STAT SYSTEMS FOR THE WORLD ========== ## 

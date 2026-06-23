@@ -1,4 +1,4 @@
-from Building import Building 
+from Buildings.Building import Building 
 from Person import Person
 from Entity import Entity 
 from TimeSystem import TimeSystem

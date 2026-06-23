@@ -4,6 +4,10 @@ import EntitySprite as EntitySprite
 import TimeSystem 
 import Universe 
 
+from Gamestates.GamestateIs import GamestateIs
+from Gamestates.MainMenu import MainMenu
+from Gamestates.Observing import Observing
+
 class Game: 
     
     def __init__(self):
@@ -13,11 +17,9 @@ class Game:
         self.clock = pygame.time.Clock()
         self.dt = 0 
         self.TimeSys = TimeSystem.TimeSystem()
+        self.current_gamestate = GamestateIs.MAIN_MENU
 
     def run(self):
-        
-        test_surface = pygame.Surface((1200,800)).convert_alpha()
-        test_surface.fill("light blue")
         
     
         
@@ -31,83 +33,75 @@ class Game:
         second_entity_sprite.add(EntitySprite.EntitySprite(second_entity, "health_building_1", 300, 300))
 
 
-
-        time_font = pygame.font.Font(None, 24)
-        time_string = "N/A"
-        time_display_surface = time_font.render(time_string, False, "Black")
-        counter = 0 
-        delta_set = 1 
         
         Universe.initBuildings()
 
+        MAIN_MENU = MainMenu()
+        OBSERVING = Observing()
+
 
         while True:
-            # event loop 
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    pygame.quit()
-                    exit()
+            
+            match self.current_gamestate:
+                case GamestateIs.MAIN_MENU:
+                    MAIN_MENU.Reset()
+                    for event in pygame.event.get():
+                        if event.type == pygame.QUIT:
+                            pygame.quit()
+                            exit()
+
+
+                        keys = pygame.key.get_pressed()
+
+                        MAIN_MENU.handleKeyInputs(keys)
+                    
+                    MAIN_MENU.drawDisplay(self.display_surface)
+                    self.current_gamestate = MAIN_MENU.getInternalState()
+                    pass
+
+                case GamestateIs.OBSERVING:
+                    OBSERVING.Reset()
+                    # event loop 
+                    for event in pygame.event.get():
+                        if event.type == pygame.QUIT:
+                            pygame.quit()
+                            exit()
                 
-                keys = pygame.key.get_pressed()
+                        keys = pygame.key.get_pressed()
+                        OBSERVING.handleKeyInputs(keys, self.TimeSys)
+                   
+                    OBSERVING.drawDisplay(self.display_surface, self.TimeSys)
+                    
+                    self.TimeSys.nextInstant()
+                    self.TimeSys.TickTickTick()
+                    Universe.worldEffects(self.TimeSys)
 
-                if keys[pygame.K_RIGHT]:
-                    self.TimeSys.changeDelta(self.TimeSys.delta * 2)
+                    self.current_gamestate = OBSERVING.getInternalState()
+                    pass
+
+                case GamestateIs.SETTINGS:
+                    pass
+
+                case GamestateIs.JUKEBOX:
+                    pass
+
+                case GamestateIs.PLACING:
+                    pass
+
+                case GamestateIs.DELGATING:
+                    pass
+
+                case __:
+                    self.current_gamestate = GamestateIs.MAIN_MENU
+
+
+
+            # test_entity_sprite.draw(self.display_surface)
+            # test_entity_sprite.update()
                 
-                if keys[pygame.K_LEFT]:
-                    self.TimeSys.changeDelta(self.TimeSys.delta * .5)
+            # second_entity_sprite.draw(self.display_surface)
+            # second_entity_sprite.update()
 
-                if keys[pygame.K_DOWN]:
-                    if self.TimeSys.delta == 0:
-                        self.TimeSys.changeDelta(1)
-                    else: 
-                        self.TimeSys.changeDelta(0)
-
-                if keys[pygame.K_q]:
-                    pygame.quit()
-                    exit()
-                
-            self.display_surface.blit(test_surface, (0,0))
-
-            test_entity_sprite.draw(self.display_surface)
-            test_entity_sprite.update()
-                
-            second_entity_sprite.draw(self.display_surface)
-            second_entity_sprite.update()
-
-            self.TimeSys.nextInstant()
-            self.TimeSys.TickTickTick()
-
-            test_health_string = "HEALTH STAT UPDATED ON THE HOUR: " + str(Universe.TEST_HEALTH_STAT)
-            ths_display_surface = time_font.render(test_health_string, False, "Black")
-            self.display_surface.blit(ths_display_surface, (250, 250))
-
-
-
-            instants_string = str(self.TimeSys.counter)
-            time_display_surface = time_font.render(instants_string, False, "Black")
-            self.display_surface.blit(time_display_surface, (1000, 15))
-
-            hours_string = str(self.TimeSys.getHours())
-            hours_display_surface = time_font.render(hours_string, False, "Blue")
-            self.display_surface.blit(hours_display_surface, (1000, 30))
-
-            days_string = str(self.TimeSys.getDays())
-            days_display_surface = time_font.render(days_string, False, "Blue")
-            self.display_surface.blit(days_display_surface, (1000, 45))
-
-            months_string = str(self.TimeSys.getMonths())
-            months_display_surface = time_font.render(months_string, False, "Red")
-            self.display_surface.blit(months_display_surface, (1000, 60))
-
-
-            years_string = str(self.TimeSys.getYears())
-            years_display_surface = time_font.render(years_string, False, "Green")
-            self.display_surface.blit(years_display_surface, (1000, 75))
-
-
-
-
-            Universe.worldEffects(self.TimeSys)
             pygame.display.update()
                 
             self.dt = self.clock.tick(60) / 1000 #limits FPS to 60
