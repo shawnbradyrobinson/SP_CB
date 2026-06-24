@@ -2,11 +2,14 @@ import pygame as pygame
 import Entity as Entity 
 import EntitySprite as EntitySprite 
 import TimeSystem 
+import MusicSystem 
 import Universe 
+
 
 from Gamestates.GamestateIs import GamestateIs
 from Gamestates.MainMenu import MainMenu
 from Gamestates.Observing import Observing
+from Gamestates.Jukebox import Jukebox
 
 class Game: 
     
@@ -38,7 +41,8 @@ class Game:
 
         MAIN_MENU = MainMenu()
         OBSERVING = Observing()
-
+        JUKEBOX = Jukebox()
+        MusicSystem.play_soundtrack()
 
         while True:
             
@@ -61,6 +65,7 @@ class Game:
 
                 case GamestateIs.OBSERVING:
                     OBSERVING.Reset()
+                    OBSERVING.handleMusic() #TODO: STILL GLITCHING BECAUSE OF LOOPING!  
                     # event loop 
                     for event in pygame.event.get():
                         if event.type == pygame.QUIT:
@@ -83,7 +88,17 @@ class Game:
                     pass
 
                 case GamestateIs.JUKEBOX:
-                    pass
+                    JUKEBOX.Reset()
+                    for event in pygame.event.get():
+                        if event.type == pygame.QUIT:
+                            pygame.quit()
+                            exit()
+
+                        keys = pygame.key.get_pressed()
+                        JUKEBOX.handleKeyInputs(keys)
+
+                        JUKEBOX.drawDisplay(self.display_surface)         
+                        self.current_gamestate = JUKEBOX.getInternalState()           
 
                 case GamestateIs.PLACING:
                     pass
@@ -105,9 +120,7 @@ class Game:
             pygame.display.update()
                 
             self.dt = self.clock.tick(60) / 1000 #limits FPS to 60
-
-
-            
+     
         
             
 game = Game()

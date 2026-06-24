@@ -1,6 +1,7 @@
 from Gamestates.Gamestate import Gamestate
 from Gamestates.GamestateIs import GamestateIs
 from TimeSystem import TimeSystem
+import MusicSystem
 import Universe 
 import pygame
 
@@ -9,6 +10,7 @@ class Observing(Gamestate):
         super().__init__()
         self.internal_state = GamestateIs.OBSERVING
         self.transition_state = GamestateIs.OBSERVING
+        self.music_started = False 
         pass
 
     def handleKeyInputs(self, keys, TS: TimeSystem):
@@ -23,6 +25,10 @@ class Observing(Gamestate):
                 TS.changeDelta(1)
             else: 
                 TS.changeDelta(0)
+
+        if keys[pygame.K_j]:
+            self.music_started = False 
+            self.transition_state = GamestateIs.JUKEBOX
 
         if keys[pygame.K_q]:
             pygame.quit()
@@ -73,12 +79,24 @@ class Observing(Gamestate):
         display_surface.blit(years_display_surface, (1000, 75))
 
         pass
-
+    
+    def handleMusic(self):
+        #print("MUSIC STARTED START: " + str(self.music_started))
+        
+        if self.music_started == False:
+            if MusicSystem.jukebox_mode == True:
+                return
+            else: 
+                MusicSystem.play_observing()
+                self.music_started = True  # still need to handle coming BACK from another state  
+        else:
+            pass
+       # print("MUSIC STARTED END: " + str(self.music_started))
 
     def getInternalState(self):
         return super().getInternalState()
     
 
-    def Reset(self):
+    def Reset(self): 
         self.internal_state = GamestateIs.OBSERVING
         self.transition_state = GamestateIs.OBSERVING
