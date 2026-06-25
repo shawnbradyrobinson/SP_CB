@@ -30,6 +30,9 @@ class Observing(Gamestate):
             self.music_started = False 
             self.transition_state = GamestateIs.JUKEBOX
 
+        if keys[pygame.K_ESCAPE]:
+            self.transition_state = GamestateIs.SETTINGS
+
         if keys[pygame.K_q]:
             pygame.quit()
             exit()
