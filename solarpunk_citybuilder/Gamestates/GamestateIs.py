@@ -7,6 +7,7 @@ class GamestateIs(Enum):
     JUKEBOX = 4 
     PLACING = 5
     DELGATING = 6 
+    NOT_DONE = 7
 
 
 

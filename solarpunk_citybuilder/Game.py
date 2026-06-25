@@ -10,6 +10,8 @@ from Gamestates.GamestateIs import GamestateIs
 from Gamestates.MainMenu import MainMenu
 from Gamestates.Observing import Observing
 from Gamestates.Jukebox import Jukebox
+from Gamestates.Settings import Settings
+from Gamestates.NotDone import NotDone
 
 class Game: 
     
@@ -42,6 +44,8 @@ class Game:
         MAIN_MENU = MainMenu()
         OBSERVING = Observing()
         JUKEBOX = Jukebox()
+        SETTINGS = Settings()
+        NOTDONE = NotDone()
         MusicSystem.play_soundtrack()
 
         while True:
@@ -65,7 +69,7 @@ class Game:
 
                 case GamestateIs.OBSERVING:
                     OBSERVING.Reset()
-                    OBSERVING.handleMusic() #TODO: STILL GLITCHING BECAUSE OF LOOPING!  
+                    OBSERVING.handleMusic()  
                     # event loop 
                     for event in pygame.event.get():
                         if event.type == pygame.QUIT:
@@ -85,7 +89,19 @@ class Game:
                     pass
 
                 case GamestateIs.SETTINGS:
-                    pass
+                    SETTINGS.Reset()
+                    SETTINGS.handleMusic()
+                    # event loop 
+                    for event in pygame.event.get():
+                        if event.type == pygame.QUIT:
+                            pygame.quit()
+                            exit()
+                        keys = pygame.key.get_pressed()
+                        SETTINGS.handleKeyInputs(keys)
+
+                    SETTINGS.drawDisplay(self.display_surface)
+                    self.current_gamestate = SETTINGS.getInternalState()
+                    pass 
 
                 case GamestateIs.JUKEBOX:
                     JUKEBOX.Reset()
@@ -105,6 +121,21 @@ class Game:
 
                 case GamestateIs.DELGATING:
                     pass
+
+                
+                case GamestateIs.NOT_DONE:
+                    NOTDONE.Reset()
+                    for event in pygame.event.get():
+                        if event.type == pygame.QUIT:
+                            pygame.quit()
+                            exit()
+
+                        keys = pygame.key.get_pressed()
+                        NOTDONE.handleKeyInputs(keys)
+                        NOTDONE.drawDisplay(self.display_surface)
+                        self.current_gamestate = NOTDONE.getInternalState()
+                    pass
+
 
                 case __:
                     self.current_gamestate = GamestateIs.MAIN_MENU
