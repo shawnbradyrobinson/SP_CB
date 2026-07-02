@@ -12,6 +12,7 @@ from Gamestates.Observing import Observing
 from Gamestates.Jukebox import Jukebox
 from Gamestates.Settings import Settings
 from Gamestates.NotDone import NotDone
+from Gamestates.Placing import Placing 
 
 class Game: 
     
@@ -46,6 +47,7 @@ class Game:
         JUKEBOX = Jukebox()
         SETTINGS = Settings()
         NOTDONE = NotDone()
+        PLACING = Placing()
         MusicSystem.play_soundtrack()
 
         while True:
@@ -59,7 +61,7 @@ class Game:
                             exit()
 
 
-                        keys = pygame.key.get_pressed()
+                        keys = pygame.key.get_just_pressed()
 
                         MAIN_MENU.handleKeyInputs(keys)
                     
@@ -81,6 +83,11 @@ class Game:
                    
                     OBSERVING.drawDisplay(self.display_surface, self.TimeSys)
                     
+                    if OBSERVING.grid_on == True:
+                        OBSERVING.drawGrid(self.display_surface)
+                    else:
+                        pass
+
                     self.TimeSys.nextInstant()
                     self.TimeSys.TickTickTick()
                     Universe.worldEffects(self.TimeSys)
@@ -117,12 +124,21 @@ class Game:
                         self.current_gamestate = JUKEBOX.getInternalState()           
 
                 case GamestateIs.PLACING:
-                    pass
+                    PLACING.Reset()
+                    for event in pygame.event.get():
+                        if event.type == pygame.QUIT:
+                            pygame.quit()
+                            exit()
+
+                        keys = pygame.key.get_pressed()
+                        PLACING.handleKeyInputs(keys)
+                        PLACING.drawDisplay(self.display_surface, OBSERVING.test_surface , self.TimeSys)
+                        self.current_gamestate = PLACING.getInternalState()
+
 
                 case GamestateIs.DELGATING:
                     pass
 
-                
                 case GamestateIs.NOT_DONE:
                     NOTDONE.Reset()
                     for event in pygame.event.get():

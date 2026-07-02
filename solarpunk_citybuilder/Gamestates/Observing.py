@@ -11,6 +11,8 @@ class Observing(Gamestate):
         self.internal_state = GamestateIs.OBSERVING
         self.transition_state = GamestateIs.OBSERVING
         self.music_started = False 
+        self.grid_on = False 
+        self.test_surface = pygame.Surface((1200,800)).convert_alpha()
         pass
 
     def handleKeyInputs(self, keys, TS: TimeSystem):
@@ -33,6 +35,22 @@ class Observing(Gamestate):
         if keys[pygame.K_ESCAPE]:
             self.transition_state = GamestateIs.SETTINGS
 
+        if keys[pygame.K_g]:
+            if self.grid_on == False:
+                self.grid_on = True
+                print(self.grid_on) 
+            return 
+        
+        if keys[pygame.K_h]:
+            if self.grid_on == True:
+                self.grid_on = False
+                print(self.grid_on)
+            return 
+        
+        if keys[pygame.K_p]:
+            self.transition_state = GamestateIs.PLACING
+
+
         if keys[pygame.K_q]:
             pygame.quit()
             exit()
@@ -44,8 +62,8 @@ class Observing(Gamestate):
         return super().handleMouseInputs(mouse)
     
     def drawDisplay(self, display_surface, TS:TimeSystem):
-        test_surface = pygame.Surface((1200,800)).convert_alpha()
-        test_surface.fill("light blue")
+        self.test_surface
+        self.test_surface.fill("light blue")
 
         time_font = pygame.font.Font(None, 24)
         time_string = "N/A"
@@ -53,7 +71,7 @@ class Observing(Gamestate):
         counter = 0 
         delta_set = 1 
 
-        display_surface.blit(test_surface, (0,0))
+        display_surface.blit(self.test_surface, (0,0))
 
 
         test_health_string = "HEALTH STAT UPDATED ON THE HOUR: " + str(Universe.TEST_HEALTH_STAT)
@@ -103,3 +121,15 @@ class Observing(Gamestate):
     def Reset(self): 
         self.internal_state = GamestateIs.OBSERVING
         self.transition_state = GamestateIs.OBSERVING
+
+    def drawGrid(self, display_surface):
+        list = [0, 100, 200, 300, 400, 500, 600, 700, 800, 900, 1000, 1100, 1200]
+        for i in list:
+            pygame.draw.line(display_surface, "Black", (0, 1*i), (1200, 1*i), 1)
+
+        for j in list:
+            pygame.draw.line(display_surface, "Black", (1*j, 0),(1*j, 800), 1)
+
+        
+
+
