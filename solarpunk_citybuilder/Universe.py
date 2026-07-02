@@ -27,6 +27,7 @@ buildings_dict = { }
 
 Community_Peace = 50 
 Community_Passion = 50 
+Community_Level = 0
 TEST_HEALTH_STAT = 0
 
 
@@ -62,6 +63,7 @@ def getTotalPersonAmount() -> int:
 
 
 
+
 ## ======== BUILDING STUFF ============================ ## 
 @staticmethod
 def initBuildings() -> None:
@@ -89,3 +91,23 @@ def worldEffects(TS: TimeSystem) -> None:
     
     
     pass 
+
+
+## ======== FOOD STUFF ======================== ##
+@staticmethod
+def getFoodStatusString() -> str:
+    return "teststeady"
+
+
+
+
+# ============ PEACE & PASSION STUFF ================= ##
+@staticmethod
+def getPeaceLevel() -> int:
+    return Community_Peace
+
+
+# ========== CITY LEVEL STUFF ======================== ##
+@staticmethod
+def getCommunityLevel() -> int:
+    return Community_Level
