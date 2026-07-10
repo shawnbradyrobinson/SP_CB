@@ -4,9 +4,10 @@ from TimeSystem import TimeSystem
 import MusicSystem
 import Universe 
 import pygame
+import math 
 
 class Observing(Gamestate):
-    def __init__(self):
+    def __init__(self, gameboard):
         super().__init__()
         self.internal_state = GamestateIs.OBSERVING
         self.transition_state = GamestateIs.OBSERVING
@@ -17,20 +18,98 @@ class Observing(Gamestate):
         self.l_toggle = False
         self.u_toggle = False 
         self.ui_on = True
+        self.gameboard = gameboard
+        self.CAMERA_SCROLL_RATE = 50 
+
+        self.highlighted = [0, 0]
+
+
+        ## camera[0] x start camera[1] x end camera[2] y start camera[3] y end 
+        self.camera = [1200,2400, 800, 1600]
         pass
 
     def handleKeyInputs(self, keys, TS: TimeSystem):
-        if keys[pygame.K_RIGHT]:
+       
+       ## ========= TIME CONTROLS =============== ##
+       
+        if keys[pygame.K_c]:
             TS.changeDelta(TS.delta * 2)
                 
-        if keys[pygame.K_LEFT]:
+        if keys[pygame.K_z]:
             TS.changeDelta(TS.delta * .5)
 
-        if keys[pygame.K_DOWN]:
+        if keys[pygame.K_x]:
             if TS.delta == 0:
                 TS.changeDelta(1)
             else: 
                 TS.changeDelta(0)
+        
+        ## ======================================= ## 
+
+
+        ## ======== CAMERA CONTROLS ============== ## 
+
+        if keys[pygame.K_w]:
+            if self.camera[2] == 0:
+                return
+            else:
+                self.camera[2] = self.camera[2] - self.CAMERA_SCROLL_RATE
+                self.camera[3] = self.camera[3] - self.CAMERA_SCROLL_RATE
+
+        if keys[pygame.K_a]:
+            if self.camera[0] == 0:
+                return 
+            else:
+                self.camera[0] = self.camera[0] - self.CAMERA_SCROLL_RATE
+                self.camera[1] = self.camera[1] - self.CAMERA_SCROLL_RATE 
+
+        if keys[pygame.K_s]:
+            if self.camera[3] >= self.gameboard.BOARD_SIZE:
+                return
+            else:
+                self.camera[3] = self.camera[3] + self.CAMERA_SCROLL_RATE
+                self.camera[2] = self.camera[2] + self.CAMERA_SCROLL_RATE
+
+        if keys[pygame.K_d]:
+            if self.camera[1] >= self.gameboard.BOARD_SIZE:
+                return
+            else:
+                self.camera[1] = self.camera[1] + self.CAMERA_SCROLL_RATE
+                self.camera[0] = self.camera[0] + self.CAMERA_SCROLL_RATE
+
+        if keys[pygame.K_UP]:
+            if self.highlighted[1] == 0:
+                self.highlighted[1] = 0
+                return 
+            else: 
+                self.highlighted[1] -= 50 
+                return 
+            
+        if keys[pygame.K_DOWN]:
+            if self.highlighted[1] == 800:
+                self.highlighted[1] = 800
+                return 
+            else:
+                self.highlighted[1] += 50
+                return  
+
+        if keys[pygame.K_RIGHT]:
+            if self.highlighted[0] == 1200:
+                self.highlighted[0] = 1200 
+                return 
+            else:
+                self.highlighted[0] += 50 
+                return 
+
+        if keys[pygame.K_LEFT]:
+            if self.highlighted[0] == 0:
+                self.highlighted[0] = 0
+                return 
+            else:
+                self.highlighted[0] -= 50 
+                return 
+        
+
 
         if keys[pygame.K_j]:
             self.music_started = False 
@@ -77,6 +156,10 @@ class Observing(Gamestate):
         
         else:
             self.l_toggle = False 
+
+
+        if keys[pygame.K_m]:
+            pygame.mixer.music.stop()
 
         if keys[pygame.K_q]:
             pygame.quit()
@@ -127,7 +210,7 @@ class Observing(Gamestate):
         quick_status_surface = pygame.Surface((400, 50)).convert_alpha()
         quick_status_surface.fill("antiquewhite3")
         quick_status_font = pygame.font.Font(None, 26)
-        quick_status_string = self.getQuickStatus()
+        quick_status_string = self.getQuickStatus(self.highlighted[0], self.highlighted[1])
         qss_surface = quick_status_font.render(quick_status_string, False, "Black")
         quick_status_surface.blit(qss_surface, (150,15))
 
@@ -180,7 +263,7 @@ class Observing(Gamestate):
 
 
         # instants_string = str(TS.counter)
-        instants_string = "[<]slow fast[>]\n-------------"
+        instants_string = "[z]slow fast[c]\n-------------"
         instants_bar_surface = pygame.Surface((100, 5)).convert_alpha()
         instants_bar_surface.fill("cornflowerblue")
         for i in range(int(TS.counter / 10)):
@@ -231,7 +314,7 @@ class Observing(Gamestate):
 
         status_command_box = pygame.Surface((200, 75)).convert_alpha()
         status_command_box.fill("brown3")
-        status_command_string = "STATUS\n[S]"
+        status_command_string = "INFO\n[I]"
         scs_surface = bar_font.render(status_command_string, False, "White")
         status_command_box.blit(scs_surface, (50, 10))
 
@@ -258,6 +341,28 @@ class Observing(Gamestate):
         # ============== END OF BOTTOM BAR UI ========================================== #         
         
         
+        current_game_board = self.gameboard.drawCurrentBoard(self.camera[0], self.camera[1], self.camera[2], self.camera[3])
+
+        display_surface.blit(current_game_board, (0,0))
+
+
+        ## =========== DRAW HIGHLIGHT =============== ## 
+        highlight_px = pygame.Surface((3,3)).convert_alpha()
+        highlight_px.fill("pink")
+        
+        for i in range (0, 50):
+            display_surface.blit(highlight_px, (self.highlighted[0]+i, self.highlighted[1]))
+        
+        for j in range (0, 50):
+            display_surface.blit(highlight_px, (self.highlighted[0], self.highlighted[1]+j))
+
+        for k in range (0, 50):
+            display_surface.blit(highlight_px, (self.highlighted[0]+50, self.highlighted[1]+k))
+
+        for l in range (0, 50):
+            display_surface.blit(highlight_px, (self.highlighted[0]+l, self.highlighted[1]+50))
+
+        ## =========================================== ## 
 
         # ============= PUTTING IT ALL TOGETHER =================================
         if self.ui_on == True:
@@ -271,6 +376,9 @@ class Observing(Gamestate):
             display_surface.blit(quick_status_surface, (400, 0))
             display_surface.blit(city_stats_surface, (800, 0))
             display_surface.blit(bottom_bar_surface, (100, 715))
+            # draw_test = pygame.Surface((50, 50)).convert_alpha()
+            # draw_test.fill("black")
+            # display_surface.blit(draw_test, (600, 400))
         else: 
             pass 
         # =============== :-) ================================================
@@ -294,6 +402,7 @@ class Observing(Gamestate):
     def getInternalState(self):
         return super().getInternalState()
     
+    
 
     def Reset(self): 
         self.internal_state = GamestateIs.OBSERVING
@@ -307,7 +416,20 @@ class Observing(Gamestate):
         for j in list:
             pygame.draw.line(display_surface, "Black", (1*j, 0),(1*j, 800), 1)
 
-    def getQuickStatus(self) -> str:
-        return "quick status"
+    def getQuickStatus(self, h_x, h_y) -> str:
+        absolute_x = math.floor((self.camera[0] + h_x) / 50) 
+        absolute_y = math.floor((self.camera[2] + h_y) / 50)
+        # absolute_x = math.floor((self.camera[0]) / 50) 
+        # absolute_y = math.floor((self.camera[1]) / 50)
+        if absolute_x >= 100:
+            absolute_x = 100
+
+        if absolute_y >= 100:
+            absolute_y = 100
+        
+        print("ABS X " +str(absolute_x) + " HIGH X " + str(h_x) + " CAM[0] " + str(self.camera[0]))
+        print("ABS Y " +str(absolute_y)+ " HIGH Y " + str(h_y) + " CAM[2] " + str(self.camera[2])) 
+
+        return str(self.gameboard.board[absolute_x][absolute_y].external)
 
 
