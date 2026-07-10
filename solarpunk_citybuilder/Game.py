@@ -4,7 +4,7 @@ import EntitySprite as EntitySprite
 import TimeSystem 
 import MusicSystem 
 import Universe 
-
+from Gameboard import Gameboard 
 
 from Gamestates.GamestateIs import GamestateIs
 from Gamestates.MainMenu import MainMenu
@@ -41,9 +41,15 @@ class Game:
 
         
         Universe.initBuildings()
+        GAMEBOARD = Gameboard()
+        GAMEBOARD.randomBoard()
+        # for j in range(100):
+        #     for i in range(100):
+        #         GAMEBOARD.board[i][j].render()
 
+        
         MAIN_MENU = MainMenu()
-        OBSERVING = Observing()
+        OBSERVING = Observing(GAMEBOARD)
         JUKEBOX = Jukebox()
         SETTINGS = Settings()
         NOTDONE = NotDone()
