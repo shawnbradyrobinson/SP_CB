@@ -46,7 +46,7 @@ class Gameboard:
     def randomBoard(self):
         for j in range(self.cols):
             for i in range(self.rows):
-                rand_roll = int(random.uniform(0, 3))
+                rand_roll = int(random.uniform(0, 4))
                 if rand_roll == 0:
                     self.board[i][j].layers.append(LayerTypeIs.LAKE_SHALLOW)
                     self.board[i][j].refreshExternal()
@@ -56,7 +56,29 @@ class Gameboard:
                 elif rand_roll == 2:
                     self.board[i][j].layers.append(LayerTypeIs.BEDROCK)
                     self.board[i][j].refreshExternal()
+                elif rand_roll == 3:
+                    self.board[i][j].layers.append(LayerTypeIs.TALL_GRASS)
+                    self.board[i][j].refreshExternal()
                 else:
                     print("did you screw up your rand roll, mate?")
 
         print("AT START [24][48]: " +str(self.board[24][48].external))
+
+        
+    def generatePlainsBoard(self):
+        for j in range(self.cols):
+            for i in range(self.rows):
+                self.board[i][j].layers.append(LayerTypeIs.DIRT_HOLE_VERY_DEEP)
+        
+        
+        
+        pass
+
+    def generateWoodedBoard(self):
+        pass
+
+    def generateLakelandsBoard(self):
+        pass
+
+    def generateCoastalBoard(self):
+        pass

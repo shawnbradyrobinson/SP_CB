@@ -8,6 +8,8 @@ class GamestateIs(Enum):
     PLACING = 5
     DELGATING = 6 
     NOT_DONE = 7
+    NEW_GAME = 8 
+    GAME_OVER = 9 
 
 
 

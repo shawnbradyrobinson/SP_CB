@@ -9,7 +9,7 @@ class LayerTypeIs(Enum):
     
 
     ## === RESIDENTIAL BUIDLING === ## 
-
+    
 
 
     ## ============================= ## 
@@ -27,10 +27,25 @@ class LayerTypeIs(Enum):
 
 
 
-
     ## =============================== ## 
     
     
+    ## === CAFETERIA ================= ##  
+
+
+    ## ================================== ## 
+
+
+    ## === WORKSHOP ======================= ## 
+
+
+
+
+    ## ====================================== ## 
+
+
+
+
     
     ## TIER 1 ## -- Things in shallow ground or bordering surface and under 
     POND = auto()
