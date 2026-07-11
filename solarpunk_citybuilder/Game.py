@@ -13,6 +13,7 @@ from Gamestates.Jukebox import Jukebox
 from Gamestates.Settings import Settings
 from Gamestates.NotDone import NotDone
 from Gamestates.Placing import Placing 
+from Gamestates.NewGame import NewGame
 
 class Game: 
     
@@ -42,13 +43,13 @@ class Game:
         
         Universe.initBuildings()
         GAMEBOARD = Gameboard()
-        GAMEBOARD.randomBoard()
         # for j in range(100):
         #     for i in range(100):
         #         GAMEBOARD.board[i][j].render()
 
         
         MAIN_MENU = MainMenu()
+        NEW_GAME = NewGame(GAMEBOARD)
         OBSERVING = Observing(GAMEBOARD)
         JUKEBOX = Jukebox()
         SETTINGS = Settings()
@@ -145,6 +146,18 @@ class Game:
                 case GamestateIs.DELGATING:
                     pass
 
+                case GamestateIs.NEW_GAME:
+                    NEW_GAME.Reset()
+                    for event in pygame.event.get():
+                        if event.type == pygame.QUIT:
+                            pygame.quit()
+                            exit()
+                        
+                        keys = pygame.key.get_pressed()
+                        NEW_GAME.handleKeyInputs(keys)
+                        NEW_GAME.drawDisplay(self.display_surface)
+                        self.current_gamestate = NEW_GAME.getInternalState() 
+                    pass
                 case GamestateIs.NOT_DONE:
                     NOTDONE.Reset()
                     for event in pygame.event.get():

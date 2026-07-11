@@ -27,7 +27,7 @@ class MainMenu(Gamestate):
 
         if keys[pygame.K_RETURN]:
             if self.selected_option == 0:
-                self.transition_state = GamestateIs.OBSERVING
+                self.transition_state = GamestateIs.NEW_GAME
             elif self.selected_option == 1:
                 self.transition_state = GamestateIs.NOT_DONE
             elif self.selected_option == 2:
