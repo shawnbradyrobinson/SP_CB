@@ -30,18 +30,20 @@ class Game:
         
     
         
-        test_entity = Entity.Entity("first entity")
-        test_entity_sprite = pygame.sprite.GroupSingle()
-        test_entity_sprite.add(EntitySprite.EntitySprite(test_entity))
+        #test_entity = Entity.Entity("first entity")
+        #test_entity_sprite = pygame.sprite.GroupSingle()
+        #test_entity_sprite.add(EntitySprite.EntitySprite(test_entity))
         
         
-        second_entity = Entity.Entity("second!")
-        second_entity_sprite = pygame.sprite.GroupSingle()
-        second_entity_sprite.add(EntitySprite.EntitySprite(second_entity, "health_building_1", 300, 300))
+        #second_entity = Entity.Entity("second!")
+        #second_entity_sprite = pygame.sprite.GroupSingle()
+        #second_entity_sprite.add(EntitySprite.EntitySprite(second_entity, "health_building_1", 300, 300))
 
 
         
         Universe.initBuildings()
+        Universe.initPersons(100)
+
         GAMEBOARD = Gameboard()
         # for j in range(100):
         #     for i in range(100):
@@ -56,7 +58,7 @@ class Game:
         NOTDONE = NotDone()
         PLACING = Placing()
         MusicSystem.play_soundtrack()
-
+        self.latest_hour = 0 
         while True:
             
             match self.current_gamestate:
@@ -90,14 +92,30 @@ class Game:
                    
                     OBSERVING.drawDisplay(self.display_surface, self.TimeSys)
                     
-                    if OBSERVING.grid_on == True:
-                        OBSERVING.drawGrid(self.display_surface)
-                    else:
-                        pass
+                    # if OBSERVING.grid_on == True:
+                    #     OBSERVING.drawGrid(self.display_surface)
+                    # else:
+                    #     pass
+                    
 
                     self.TimeSys.nextInstant()
                     self.TimeSys.TickTickTick()
                     Universe.worldEffects(self.TimeSys)
+
+
+                    #WALKING SOMEWHERE EACH HOUR 
+                    if self.TimeSys.getHours() > self.latest_hour:
+                        for person in Universe.persons_dict.keys():
+                            peep = Universe.persons_dict[person]
+                            if peep.currently_delegated == True:
+                                peep.continue_guided_walk(GAMEBOARD)
+                            else:
+                                peep.random_walk(GAMEBOARD)
+                            
+                        self.latest_hour = self.TimeSys.getHours()
+
+
+
 
                     self.current_gamestate = OBSERVING.getInternalState()
                     pass

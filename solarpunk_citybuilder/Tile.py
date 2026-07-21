@@ -7,6 +7,7 @@ class Tile:
         self.square_dimesion_px = square_dimension_px
         self.layers = [LayerTypeIs.BEDROCK]
         self.stood_on = False 
+        self.stood_on_by = None #Person object that is on this Tile 
         self.walkable = True 
         self.external = self.layers[len(self.layers)-1]
         self.image = pygame.Surface((square_dimension_px, self.square_dimesion_px)).convert_alpha()
@@ -24,6 +25,7 @@ class Tile:
            
             case LayerTypeIs.BEDROCK:
                 self.image.fill("Grey10")
+                self.walkable = False 
 
             # TIER 0 
             case LayerTypeIs.SHORT_GRASS:
@@ -32,6 +34,7 @@ class Tile:
                 self.image = pygame.image.load("graphics/tall_grass_1.png").convert_alpha()
             case LayerTypeIs.TREE:
                 self.image.fill("goldenrod1")
+                self.walkable = False 
             
             # TIER 1 
             case LayerTypeIs.LAKE_SHALLOW:
@@ -48,12 +51,14 @@ class Tile:
 
             case LayerTypeIs.LAKE_DEEP:
                 self.image.fill("dodgerblue3")
-            
+                self.walkable = False 
             case LayerTypeIs.OCEAN_DEEP:
                 self.image.fill("blue4")
+                self.walkable = False 
             
-            case LayerTypeIs.Dirt_HOLE_DEEP:
+            case LayerTypeIs.DIRT_HOLE_DEEP:
                 self.image.fill("brown2")
+                self.walkable = False 
 
 
             # TIER 3 
@@ -65,6 +70,15 @@ class Tile:
 
             case LayerTypeIs.OCEAN_VERY_DEEP:
                 self.image.fill("darkslateblue")
+                self.walkable = False 
             
             case LayerTypeIs.DIRT_HOLE_VERY_DEEP:
                 self.image.fill("brown3")
+                self.walkable = False 
+
+    def addTileLayer(self, tile_layer: LayerTypeIs):
+        self.layers.append(tile_layer)
+        self.refreshExternal()
+
+    def tileWalkable(self) -> bool:
+        return self.walkable  
