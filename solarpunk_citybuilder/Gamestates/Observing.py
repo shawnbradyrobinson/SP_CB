@@ -23,6 +23,18 @@ class Observing(Gamestate):
 
         self.highlighted = [0, 0]
 
+        self.target_start = [0, 0]
+        self.target_end = [0, 0]
+
+        self.quick_status_override = False 
+        self.special_status_message = "SPECIAL!"
+
+        self.highlight_fill_color = "pink"
+
+        self.targeting_started = False 
+
+        self.targeted_person = None 
+
 
         ## camera[0] x start camera[1] x end camera[2] y start camera[3] y end 
         self.camera = [1200,2400, 800, 1600]
@@ -164,6 +176,70 @@ class Observing(Gamestate):
         if keys[pygame.K_q]:
             pygame.quit()
             exit()
+
+        if keys[pygame.K_LSHIFT] or keys[pygame.K_RSHIFT]:
+            self.highlight_fill_color = "pink"
+            self.targeting_started = False 
+            self.target_start[0] = 0 
+            self.target_start[1] = 0 
+            self.quick_status_override = False 
+            pass
+
+
+        if keys[pygame.K_RETURN]:
+
+            absolute_x = math.floor((self.camera[0] + self.highlighted[0]) / 50) 
+            absolute_y = math.floor((self.camera[2] + self.highlighted[1]) / 50)
+            # absolute_x = math.floor((self.camera[0]) / 50) 
+            # absolute_y = math.floor((self.camera[1]) / 50)
+            if absolute_x >= 100:
+                absolute_x = 100
+
+            if absolute_y >= 100:
+                absolute_y = 100
+
+
+            #GUIDED WALK 
+            if self.targeting_started == False: 
+                if self.gameboard.board[absolute_x][absolute_y].stood_on == True:
+                    self.quick_status_override = True 
+                    self.targeted_person = self.gameboard.board[absolute_x][absolute_y].stood_on_by 
+                    self.special_status_message = "where should " +self.gameboard.board[absolute_x][absolute_y].stood_on_by.first_name +" go?\nshift to cancel"
+                
+                    self.target_start[0] = absolute_x 
+                    self.target_start[1] = absolute_y
+
+                    self.targeting_started = True 
+
+                    self.highlight_fill_color = "yellow"
+                else: 
+                    pass           
+            else:
+                self.target_end[0] = absolute_x
+                self.target_end[1] = absolute_y
+                
+                if self.gameboard.board[absolute_x][absolute_y].tileWalkable() == True:
+                    self.highlight_fill_color = "pink"
+                    self.quick_status_override = False
+
+                    self.targeted_person.start_guided_walk(self.target_end)
+
+
+                    pass
+                else:
+                    self.special_status_message = "can't walk there, silly!\nshift to cancel"  
+                    return 
+
+
+
+                self.quick_status_override = False
+                self.targeting_started = False  
+                self.targeted_person = None 
+                pass 
+
+        
+        
+        
         pass
 
 
@@ -210,7 +286,11 @@ class Observing(Gamestate):
         quick_status_surface = pygame.Surface((400, 50)).convert_alpha()
         quick_status_surface.fill("antiquewhite3")
         quick_status_font = pygame.font.Font(None, 26)
-        quick_status_string = self.getQuickStatus(self.highlighted[0], self.highlighted[1])
+        if self.quick_status_override == False:
+            quick_status_string = self.getQuickStatus(self.highlighted[0], self.highlighted[1])
+        else: 
+            quick_status_string = self.special_status_message  
+        
         qss_surface = quick_status_font.render(quick_status_string, False, "Black")
         quick_status_surface.blit(qss_surface, (150,15))
 
@@ -248,7 +328,7 @@ class Observing(Gamestate):
         # =========== END CITY STATS DISPLAY UI ======================= #
 
 
-
+        #dummy_dude = pygame.image.load("graphics/dummy_dude.png").convert_alpha()
 
 
         # =============== TIME DISPLAY UI ===================================== # 
@@ -348,7 +428,7 @@ class Observing(Gamestate):
 
         ## =========== DRAW HIGHLIGHT =============== ## 
         highlight_px = pygame.Surface((3,3)).convert_alpha()
-        highlight_px.fill("pink")
+        highlight_px.fill(self.highlight_fill_color)
         
         for i in range (0, 50):
             display_surface.blit(highlight_px, (self.highlighted[0]+i, self.highlighted[1]))
@@ -376,6 +456,7 @@ class Observing(Gamestate):
             display_surface.blit(quick_status_surface, (400, 0))
             display_surface.blit(city_stats_surface, (800, 0))
             display_surface.blit(bottom_bar_surface, (100, 715))
+            #display_surface.blit(dummy_dude, (600, 400))
             # draw_test = pygame.Surface((50, 50)).convert_alpha()
             # draw_test.fill("black")
             # display_surface.blit(draw_test, (600, 400))
@@ -427,8 +508,8 @@ class Observing(Gamestate):
         if absolute_y >= 100:
             absolute_y = 100
         
-        print("ABS X " +str(absolute_x) + " HIGH X " + str(h_x) + " CAM[0] " + str(self.camera[0]))
-        print("ABS Y " +str(absolute_y)+ " HIGH Y " + str(h_y) + " CAM[2] " + str(self.camera[2])) 
+        #print("ABS X " +str(absolute_x) + " HIGH X " + str(h_x) + " CAM[0] " + str(self.camera[0]))
+        #print("ABS Y " +str(absolute_y)+ " HIGH Y " + str(h_y) + " CAM[2] " + str(self.camera[2])) 
 
         return str(self.gameboard.board[absolute_x][absolute_y].external)
 
