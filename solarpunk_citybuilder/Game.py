@@ -14,6 +14,7 @@ from Gamestates.Settings import Settings
 from Gamestates.NotDone import NotDone
 from Gamestates.Placing import Placing 
 from Gamestates.NewGame import NewGame
+from Gamestates.People import People 
 
 class Game: 
     
@@ -53,10 +54,12 @@ class Game:
         MAIN_MENU = MainMenu()
         NEW_GAME = NewGame(GAMEBOARD)
         OBSERVING = Observing(GAMEBOARD)
+        PEOPLE = People()
         JUKEBOX = Jukebox()
         SETTINGS = Settings()
         NOTDONE = NotDone()
         PLACING = Placing()
+
         MusicSystem.play_soundtrack()
         self.latest_hour = 0 
         while True:
@@ -161,8 +164,17 @@ class Game:
                         self.current_gamestate = PLACING.getInternalState()
 
 
-                case GamestateIs.DELGATING:
-                    pass
+                case GamestateIs.PEOPLE:
+                    PEOPLE.Reset()
+                    for event in pygame.event.get():
+                        if event.type == pygame.QUIT:
+                            pygame.quit()
+                            exit()
+
+                        keys = pygame.key.get_pressed()
+                        PEOPLE.handleKeyInputs(keys)
+                        PEOPLE.drawDisplay(self.display_surface)
+                        self.current_gamestate = PEOPLE.getInternalState()
 
                 case GamestateIs.NEW_GAME:
                     NEW_GAME.Reset()

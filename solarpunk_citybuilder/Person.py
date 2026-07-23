@@ -3,7 +3,7 @@ from Inventory import Inventory
 import pygame 
 import random 
 import Gameboard 
-
+import Universe 
 
 class Person(Entity):
     "Generic starting point for all persons"
@@ -158,6 +158,7 @@ class Person(Entity):
             self.currently_delegated = False
             self.headed_toward[0] = 0 
             self.headed_toward[1] = 0 
+            Universe.addAdventureLog(self.first_name + " reached their destination!")
             self.person_status = "is idle"  
 
             return   
@@ -206,6 +207,7 @@ class Person(Entity):
                     self.person_pos_y = starting_spot_y
                     gameboard.board[self.person_pos_x][self.person_pos_y].stood_on = True 
                     gameboard.board[self.person_pos_x][self.person_pos_y].stood_on_by = self 
+            Universe.addAdventureLog(self.first_name + " is still on their way...")
             return 
     def hasReachedDestination(self):
         return self.person_pos_x == self.headed_toward[0] and self.person_pos_y == self.headed_toward[1]

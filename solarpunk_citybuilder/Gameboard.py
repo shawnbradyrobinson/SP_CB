@@ -129,7 +129,7 @@ class Gameboard:
             rand_roll2 = int(random.uniform(0, 99))
             self.board[rand_roll][rand_roll2].render()
             if self.board[rand_roll][rand_roll2].tileWalkable() == True:
-                print("it was true!")
+                #print("it was true!")
                 Universe.persons_dict[person].person_pos_x = rand_roll
                 Universe.persons_dict[person].person_pos_y = rand_roll2
                 self.board[rand_roll][rand_roll2].stood_on = True

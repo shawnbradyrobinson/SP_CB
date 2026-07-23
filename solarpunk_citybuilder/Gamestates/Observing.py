@@ -14,15 +14,22 @@ class Observing(Gamestate):
         self.music_started = False 
         self.grid_on = False 
         self.test_surface = pygame.Surface((1200,800)).convert_alpha()
+        
+        
+        #SHORT LOG CAN HOLD 6 
+        #LONG LOG CAN HOLD 26
+ 
         self.log_showing = 1
         self.l_toggle = False
+        
+        
+        
         self.u_toggle = False 
         self.ui_on = True
         self.gameboard = gameboard
         self.CAMERA_SCROLL_RATE = 50 
 
         self.highlighted = [0, 0]
-
         self.target_start = [0, 0]
         self.target_end = [0, 0]
 
@@ -238,7 +245,9 @@ class Observing(Gamestate):
                 pass 
 
         
-        
+        if keys[pygame.K_p]:
+            self.transition_state = GamestateIs.PEOPLE
+            return 
         
         pass
 
@@ -265,9 +274,20 @@ class Observing(Gamestate):
         short_adventure_log_surface = pygame.Surface((400, 100)).convert_alpha()
         short_adventure_log_surface.fill("grey20")
         adventure_log_font = pygame.font.Font(None, 20)
+        assembled_logs = " "
 
-        log_test_string = "abcdefghijklmnopqrstuvwxyz abcdefghijlkmnopqrstuvwxyz"
-        lt_surface = adventure_log_font.render(log_test_string, False, "greenyellow")
+        if self.log_showing == 1: 
+            i = 5
+            while i >= 0: 
+               assembled_logs += Universe.adventure_logs[(len(Universe.adventure_logs)-1)- i] + "\n"
+               i -= 1 
+        elif self.log_showing == 2: 
+            for i in range(len(Universe.adventure_logs)):
+                assembled_logs += Universe.adventure_logs[i] + "\n"
+                pass 
+
+        
+        lt_surface = adventure_log_font.render(assembled_logs, False, "greenyellow")
         short_adventure_log_surface.blit(lt_surface, (5, 5))
 
 
