@@ -12,6 +12,7 @@ class GamestateIs(Enum):
     NOT_DONE = 9
     NEW_GAME = 10 
     GAME_OVER = 11 
+    CREDITS = 12 
 
 
 
