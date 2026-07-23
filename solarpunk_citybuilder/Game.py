@@ -15,6 +15,7 @@ from Gamestates.NotDone import NotDone
 from Gamestates.Placing import Placing 
 from Gamestates.NewGame import NewGame
 from Gamestates.People import People 
+from Gamestates.Credits import Credits
 
 class Game: 
     
@@ -59,6 +60,7 @@ class Game:
         SETTINGS = Settings()
         NOTDONE = NotDone()
         PLACING = Placing()
+        CREDITS = Credits()
 
         MusicSystem.play_soundtrack()
         self.latest_hour = 0 
@@ -188,6 +190,19 @@ class Game:
                         NEW_GAME.drawDisplay(self.display_surface)
                         self.current_gamestate = NEW_GAME.getInternalState() 
                     pass
+
+                case GamestateIs.CREDITS:
+                    CREDITS.Reset()
+                    for event in pygame.event.get():
+                        if event.type == pygame.QUIT:
+                            pygame.quit()
+                            exit()
+                        keys = pygame.key.get_pressed()
+                        CREDITS.handleKeyInputs(keys)
+                        CREDITS.drawDisplay(self.display_surface)
+                        self.current_gamestate = CREDITS.getInternalState()
+                    pass     
+                
                 case GamestateIs.NOT_DONE:
                     NOTDONE.Reset()
                     for event in pygame.event.get():

@@ -312,7 +312,7 @@ class Observing(Gamestate):
             quick_status_string = self.special_status_message  
         
         qss_surface = quick_status_font.render(quick_status_string, False, "Black")
-        quick_status_surface.blit(qss_surface, (150,15))
+        quick_status_surface.blit(qss_surface, (100,15))
 
 
 

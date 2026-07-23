@@ -33,7 +33,7 @@ class MainMenu(Gamestate):
             elif self.selected_option == 2:
                 self.transition_state = GamestateIs.NOT_DONE
             elif self.selected_option == 3:
-                self.transition_state = GamestateIs.NOT_DONE
+                self.transition_state = GamestateIs.CREDITS
             else:
                 return
 
