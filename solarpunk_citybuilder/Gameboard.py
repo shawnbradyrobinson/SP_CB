@@ -3,7 +3,7 @@ from Tile import Tile
 import pygame 
 import random 
 from LayerTypeIs import LayerTypeIs
-
+# import LandscapeCA
 
 class Gameboard:
     def __init__(self, rows = 100, cols = 100):
@@ -12,6 +12,8 @@ class Gameboard:
         self.board = [[Tile() for i in range(cols)] for j in range(rows)]
         #Since boards are square, measure this one way, and you've got it for both ways 
         self.BOARD_SIZE = rows * self.board[0][0].square_dimesion_px
+        self.gameworld = None 
+
         pass
     pass
 
@@ -99,8 +101,15 @@ class Gameboard:
         pass
 
     def generateLakelandsBoard(self):
-        pass
-
+        #self.gameworld = LandscapeCA.make_landscape()
+        
+        # for j in range(0, 100):
+        #     for i in range(0, 100):
+        #         pass 
+        pass 
+    
+    
+    
     def generateCoastalBoard(self):
         pass
 
@@ -137,5 +146,42 @@ class Gameboard:
             else:
                 pass   
 
+    def IliumCrossing(self):
+        for j in range(0, 100):
+            for i in range(0, 100):
+                self.board[i][j].addTileLayer(LayerTypeIs.SHORT_GRASS) 
+
+
+
+
+
+        ## ============= BORDERS  
+        for k in range(0, 100):
+            self.board[0][k].addTileLayer(LayerTypeIs.BEDROCK)
+            pass
         
+        for m in range(0, 100):
+            self.board[m][0].addTileLayer(LayerTypeIs.BEDROCK)
+
+        for i in range(0, 100):
+            self.board[99][i].addTileLayer(LayerTypeIs.BEDROCK)
+        
+        for i in range(0, 100):
+            self.board[i][99].addTileLayer(LayerTypeIs.BEDROCK)
+
+        ## ============
+
+
+
+
+
+
+        # for j in range(0, 100):
+        #     for i in range(0, 100):
+        #         self.board[i][j].addTileLayer(LayerTypeIs.FOG)
+
+
+
+
+        pass 
     

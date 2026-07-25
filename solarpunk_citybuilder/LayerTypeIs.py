@@ -6,7 +6,23 @@ class LayerTypeIs(Enum):
     TREE = auto()
     TALL_GRASS = auto()
     SHORT_GRASS = auto()
-    
+    FOG = auto()
+    GRAVEL = auto()
+    COLLAPSED_BUILDING = auto()
+    ROADWAY = auto()
+
+
+    CAVE = auto()
+    BIG_ROCKS = auto()
+    GAS_STALL = auto()
+
+
+    ## === RUINED GAS STATION === ## 
+
+
+
+    ## =========================== ## 
+
 
     ## === RESIDENTIAL BUIDLING === ## 
     
