@@ -8,7 +8,7 @@ class NewGame(Gamestate):
         super().__init__()
         self.internal_state = GamestateIs.NEW_GAME
         self.transition_state = GamestateIs.NEW_GAME
-        self.options_list = ["TESTBOARD", "randtile", "LAKELANDS", "COASTAL", "RANDOM"] #PLAINS, WOODED, LAKELANDS, COASTAL, RANDOM 
+        self.options_list = ["Ilium Crossing", "randtile", "LAKELANDS", "COASTAL", "RANDOM"] #PLAINS, WOODED, LAKELANDS, COASTAL, RANDOM 
         self.selected_option = 0 
         self.world_gen = self.options_list[0]
         self.gameboard = gameboard
@@ -33,7 +33,7 @@ class NewGame(Gamestate):
 
         if keys[pygame.K_RETURN]:
             if self.selected_option == 0:
-                self.gameboard.generateTestBoard()
+                self.gameboard.IliumCrossing()
                 self.transition_state = GamestateIs.OBSERVING
             elif self.selected_option == 1:
                 self.gameboard.randomBoard()

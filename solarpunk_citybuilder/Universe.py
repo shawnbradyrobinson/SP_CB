@@ -28,12 +28,12 @@ buildings_dict = { }
 
 persons_sprites = [
 
-"graphics/dummy_dude.png",
-"graphics/dummy_dude_1.png",
-"graphics/dummy_dude_2.png",
-"graphics/dummy_dude_3.png",
-"graphics/dummy_dude_4.png",
-"graphics/dummy_dude_5.png"
+"graphics/person_one.png",
+"graphics/person_two.png",
+"graphics/person_three.png",
+"graphics/person_four.png",
+"graphics/person_five.png",
+"graphics/person_six.png"
 
 ]
 
