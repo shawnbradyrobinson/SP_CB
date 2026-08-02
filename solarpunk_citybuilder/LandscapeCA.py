@@ -60,7 +60,7 @@ def update_cell_id_fast(grid, n_terrain, energy):
     return grid
 
 
-def fast_ca(grid, n_terrain, iterations):
+def fast_ca(grid, n_terrain, iterations, plotting=False):
     '''
     Parameters
     ----------
@@ -81,7 +81,10 @@ def fast_ca(grid, n_terrain, iterations):
     for i in range(iterations):
         for j in range(1, 7):
             grid = update_cell_id_fast(grid, n_terrain, j)
-            
+            if plotting: 
+                plt.figure()
+                plt.imshow(grid)
+                plt.show()
     ### works to remove jagged edges ###
     grid = update_cell_id_fast(grid, n_terrain, 4)
     return grid
@@ -100,7 +103,7 @@ def make_landscape(n = 100, its_water = 15, its_land = 5, n_terrain_0 = 2, n_ter
     ### the below line increases the prevalance of land from the 50/50 initial split ###
     grid[rng.integers(0,n, size=(int(n**2 / water))), rng.integers(0,n, size=(int(n**2 / water)))] = 1
     
-    grid_water = fast_ca(grid, n_terrain_0, its_water)
+    grid_water = fast_ca(grid, n_terrain_0, its_water, plotting=plotting)
     if plotting:
         plt.imshow(grid_water)
         plt.show()
@@ -108,19 +111,51 @@ def make_landscape(n = 100, its_water = 15, its_land = 5, n_terrain_0 = 2, n_ter
     
     #### GENERATE LAND ####
     grid = init_grid(n, n_terrain_1)  # initiate a random grid w/ n_terrain states
-    grid_land = fast_ca(grid, n_terrain_1, its_land) 
+    grid_land = fast_ca(grid, n_terrain_1, its_land, plotting=plotting) 
     grid_land += 1      # add one to everything since water is chosen as state '0' 
                         # adding 1 makes there be no water in the land prior to masking
-    grid_land[np.where(grid_water == 0)] = 0    # mask the land with the water/bedrock.
+    
+    try: 
+        grid_land[np.where(grid_water == 0)] = 0    # mask the land with the water/bedrock.
+    except:
+        pass
+    
     if plotting:
         plt.imshow(grid_land)   # look at the beautiful landscape!
         plt.show()
         
     return grid_land
 
-if __name__ == '__main__':
-    make_landscape(plotting=True)
+def layered_CA(background, n_terrain, iterations, growth_rules, plotting=False):
+    n = np.shape(background)[0]
+    layer = init_grid(n, n_terrain)
+    n_background = len(np.unique(background))
+    for i in range(iterations):
+        for j in range(1, 7):
+            #layer = update_cell_id_fast(layer, n_terrain, j)
+            for k in range(n_background):
+                layer_k = np.copy(layer)
+                layer_k[background!=k] = -1
+                ### make a new CA which only works for the cells that are allowed ###
+                layer = update_cell_id_fast(layer, n_terrain, j)
 
+                
+            if plotting: 
+                plt.figure()
+                plt.imshow(layer)
+                plt.show()
+    return layer
+    
+
+if __name__ == '__main__':
+    #background = fast_ca(init_grid(100,2), 2, 5, plotting=True)    
+    background = np.zeros((100,100))
+    background[50:] = 1
+    growth_rules = np.array([[1,1,1], [1,0,0]], dtype=bool)
+    n_terrain = 3    
+    layer = layered_CA(background, n_terrain, 20, growth_rules, plotting=True)
+    
+    
 #
 #
 #
