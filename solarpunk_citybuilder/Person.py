@@ -19,7 +19,13 @@ class Person(Entity):
         self.person_pos_y = 0 
         
         self.person_status = "is idle"
-        self.currently_delegated = False 
+        self.currently_delegated_towalk = False 
+
+
+        self.currently_delegated_toact = False 
+        self.current_action_turns = 0 
+        self.total_action_turns = 0 
+        self.action_finished = False 
 
         self.headed_toward = [0,0]
 
@@ -148,14 +154,14 @@ class Person(Entity):
 
     def start_guided_walk(self, destination_target: list):
         #Change icon to "on a mission"
-        self.currently_delegated = True 
+        self.currently_delegated_towalk = True 
         self.headed_toward[0] = destination_target[0]
         self.headed_toward[1] = destination_target[1]
         self.person_status = "is walking to " +str(self.headed_toward[0]) +" , " + str(self.headed_toward[1])
 
     def continue_guided_walk(self, gameboard: Gameboard):
         if self.hasReachedDestination() == True:
-            self.currently_delegated = False
+            self.currently_delegated_towalk = False
             self.headed_toward[0] = 0 
             self.headed_toward[1] = 0 
             Universe.addAdventureLog(self.first_name + " reached their destination!")
@@ -209,6 +215,15 @@ class Person(Entity):
                     gameboard.board[self.person_pos_x][self.person_pos_y].stood_on_by = self 
             Universe.addAdventureLog(self.first_name + " is still on their way...")
             return 
+        
+    
     def hasReachedDestination(self):
         return self.person_pos_x == self.headed_toward[0] and self.person_pos_y == self.headed_toward[1]
     
+    def takingAction(self):
+        if self.current_action_turns < self.total_action_turns:
+            self.current_action_turns += 1 
+            self.action_finished = False 
+        else:
+            self.action_finished = True 
+         

@@ -95,7 +95,7 @@ class People(Gamestate):
             person_status = "STATUS: " +self.page_positions[0].person_status 
             ps = people_standard_font.render(person_status, False, "White")
 
-            currently_delegated = "DELEGATED: " +str(self.page_positions[0].currently_delegated)
+            currently_delegated = "DELEGATED: " +str(self.page_positions[0].currently_delegated_towalk)
             cd = people_standard_font.render(currently_delegated, False, "White")
             
             person_age = "AGE: " +str(self.page_positions[0].age) 
@@ -145,7 +145,7 @@ class People(Gamestate):
             person_status = "STATUS: " +self.page_positions[1].person_status 
             ps = people_standard_font.render(person_status, False, "White")
 
-            currently_delegated = "DELEGATED: " +str(self.page_positions[1].currently_delegated)
+            currently_delegated = "DELEGATED: " +str(self.page_positions[1].currently_delegated_towalk)
             cd = people_standard_font.render(currently_delegated, False, "White")
             
             person_age = "AGE: " +str(self.page_positions[1].age) 
@@ -192,7 +192,7 @@ class People(Gamestate):
             person_status = "STATUS: " +self.page_positions[2].person_status 
             ps = people_standard_font.render(person_status, False, "White")
 
-            currently_delegated = "DELEGATED: " +str(self.page_positions[2].currently_delegated)
+            currently_delegated = "DELEGATED: " +str(self.page_positions[2].currently_delegated_towalk)
             cd = people_standard_font.render(currently_delegated, False, "White")
             
             person_age = "AGE: " +str(self.page_positions[2].age) 
@@ -239,7 +239,7 @@ class People(Gamestate):
             person_status = "STATUS: " +self.page_positions[3].person_status 
             ps = people_standard_font.render(person_status, False, "White")
 
-            currently_delegated = "DELEGATED: " +str(self.page_positions[3].currently_delegated)
+            currently_delegated = "DELEGATED: " +str(self.page_positions[3].currently_delegated_towalk)
             cd = people_standard_font.render(currently_delegated, False, "White")
             
             person_age = "AGE: " +str(self.page_positions[3].age) 
@@ -287,7 +287,7 @@ class People(Gamestate):
             person_status = "STATUS: " +self.page_positions[4].person_status 
             ps = people_standard_font.render(person_status, False, "White")
 
-            currently_delegated = "DELEGATED: " +str(self.page_positions[4].currently_delegated)
+            currently_delegated = "DELEGATED: " +str(self.page_positions[4].currently_delegated_towalk)
             cd = people_standard_font.render(currently_delegated, False, "White")
             
             person_age = "AGE: " +str(self.page_positions[4].age) 
@@ -335,7 +335,7 @@ class People(Gamestate):
             person_status = "STATUS: " +self.page_positions[5].person_status 
             ps = people_standard_font.render(person_status, False, "White")
 
-            currently_delegated = "DELEGATED: " +str(self.page_positions[5].currently_delegated)
+            currently_delegated = "DELEGATED: " +str(self.page_positions[5].currently_delegated_towalk)
             cd = people_standard_font.render(currently_delegated, False, "White")
             
             person_age = "AGE: " +str(self.page_positions[5].age) 
@@ -383,7 +383,7 @@ class People(Gamestate):
             person_status = "STATUS: " +self.page_positions[6].person_status 
             ps = people_standard_font.render(person_status, False, "White")
 
-            currently_delegated = "DELEGATED: " +str(self.page_positions[6].currently_delegated)
+            currently_delegated = "DELEGATED: " +str(self.page_positions[6].currently_delegated_towalk)
             cd = people_standard_font.render(currently_delegated, False, "White")
             
             person_age = "AGE: " +str(self.page_positions[6].age) 
@@ -430,7 +430,7 @@ class People(Gamestate):
             person_status = "STATUS: " +self.page_positions[7].person_status 
             ps = people_standard_font.render(person_status, False, "White")
 
-            currently_delegated = "DELEGATED: " +str(self.page_positions[7].currently_delegated)
+            currently_delegated = "DELEGATED: " +str(self.page_positions[7].currently_delegated_towalk)
             cd = people_standard_font.render(currently_delegated, False, "White")
             
             person_age = "AGE: " +str(self.page_positions[7].age) 

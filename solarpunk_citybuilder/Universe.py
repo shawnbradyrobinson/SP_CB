@@ -16,6 +16,7 @@ from Buildings.HealthBuilding import HealthBuilding
 from Buildings.Building import Building
 from Person import Person
 from names import names 
+from Inventory import Inventory 
 import pygame 
 import random 
 import math
@@ -42,7 +43,7 @@ Community_Passion = 50
 Community_Level = 0
 TEST_HEALTH_STAT = 0
 
-
+Community_Inventory = Inventory()
 
 #SHORT LOG CAN HOLD 6 
 #LONG LOG CAN HOLD 26
@@ -87,6 +88,10 @@ def initPersons(starting_amount = 10):
         new_person = Person(names[rand_roll])
         persons_dict[new_person.person_name] = new_person 
         new_person.surface_sprite = pygame.image.load(persons_sprites[rr_two]).convert_alpha()
+        if rand_roll % 2 == 0:
+            new_person.personal_inventory.items["tools"]["standard_axe"] += 1 
+        else:
+            new_person.personal_inventory.items["tools"]["standard_fishing_rod"] += 1 
     pass 
 
     #print(persons_dict)
@@ -173,3 +178,11 @@ def addAdventureLog(new_log: str):
         adventure_logs[i] = adventure_logs[i+1]
     adventure_logs[len(adventure_logs)-1] = new_log 
     pass 
+
+
+
+# ========== INVENTORY STUFF ====================== ## 
+@staticmethod
+def initCommunityInventory():
+    Community_Inventory = Inventory()
+    #print(Community_Inventory.)

@@ -52,7 +52,7 @@ class Gameboard:
     def randomBoard(self):
         for j in range(self.cols):
             for i in range(self.rows):
-                rand_roll = int(random.uniform(0, 4))
+                rand_roll = int(random.uniform(0, 7))
                 if rand_roll == 0:
                     self.board[i][j].layers.append(LayerTypeIs.LAKE_SHALLOW)
                     self.board[i][j].refreshExternal()
@@ -65,6 +65,17 @@ class Gameboard:
                 elif rand_roll == 3:
                     self.board[i][j].layers.append(LayerTypeIs.TALL_GRASS)
                     self.board[i][j].refreshExternal()
+                elif rand_roll == 4: 
+                    self.board[i][j].layers.append(LayerTypeIs.TALL_GRASS)
+                    self.board[i][j].layers.append(LayerTypeIs.TREE)
+                    self.board[i][j].refreshExternal()
+                elif rand_roll == 5:
+                    self.board[i][j].layers.append(LayerTypeIs.SHORT_GRASS)
+                    self.board[i][j].layers.append(LayerTypeIs.TREE)
+                    self.board[i][j].refreshExternal()
+                elif rand_roll == 6:
+                    self.board[i][j].layers.append(LayerTypeIs.POND)
+                    self.board[i][j].refreshExternal()
                 else:
                     print("did you screw up your rand roll, mate?")
 
@@ -74,7 +85,7 @@ class Gameboard:
             rand_roll2 = int(random.uniform(0, 99))
             self.board[rand_roll][rand_roll2].render()
             if self.board[rand_roll][rand_roll2].tileWalkable() == True:
-                print("it was true!")
+               # print("it was true!")
                 Universe.persons_dict[person].person_pos_x = rand_roll
                 Universe.persons_dict[person].person_pos_y = rand_roll2
                 self.board[rand_roll][rand_roll2].stood_on = True

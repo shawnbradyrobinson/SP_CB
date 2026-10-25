@@ -42,6 +42,11 @@ class Observing(Gamestate):
 
         self.targeted_person = None 
 
+        self.deciding_tile_action = False 
+        self.action_list = [None, None, None, None, None]
+        self.selected_ta_option = 0
+        self.this_tile = None 
+        self.this_person_on_tile = None 
 
         ## camera[0] x start camera[1] x end camera[2] y start camera[3] y end 
         self.camera = [1200,2400, 800, 1600]
@@ -69,6 +74,9 @@ class Observing(Gamestate):
         ## ======== CAMERA CONTROLS ============== ## 
 
         if keys[pygame.K_w]:
+            if self.deciding_tile_action == True:
+                return 
+            
             if self.camera[2] == 0:
                 return
             else:
@@ -76,6 +84,9 @@ class Observing(Gamestate):
                 self.camera[3] = self.camera[3] - self.CAMERA_SCROLL_RATE
 
         if keys[pygame.K_a]:
+            if self.deciding_tile_action == True:
+                return 
+            
             if self.camera[0] == 0:
                 return 
             else:
@@ -83,6 +94,9 @@ class Observing(Gamestate):
                 self.camera[1] = self.camera[1] - self.CAMERA_SCROLL_RATE 
 
         if keys[pygame.K_s]:
+            if self.deciding_tile_action == True:
+                return 
+            
             if self.camera[3] >= self.gameboard.BOARD_SIZE:
                 return
             else:
@@ -90,6 +104,9 @@ class Observing(Gamestate):
                 self.camera[2] = self.camera[2] + self.CAMERA_SCROLL_RATE
 
         if keys[pygame.K_d]:
+            if self.deciding_tile_action == True:
+                return 
+            
             if self.camera[1] >= self.gameboard.BOARD_SIZE:
                 return
             else:
@@ -97,6 +114,13 @@ class Observing(Gamestate):
                 self.camera[0] = self.camera[0] + self.CAMERA_SCROLL_RATE
 
         if keys[pygame.K_UP]:
+            if self.deciding_tile_action == True:
+                if self.selected_ta_option == 0:
+                    self.selected_ta_option = 0
+                else:
+                    self.selected_ta_option -= 1 
+                return 
+            
             if self.highlighted[1] == 0:
                 self.highlighted[1] = 0
                 return 
@@ -105,6 +129,13 @@ class Observing(Gamestate):
                 return 
             
         if keys[pygame.K_DOWN]:
+            if self.deciding_tile_action == True:
+                if self.selected_ta_option == 4:
+                    self.seletect_ta_option = 4
+                else:
+                    self.selected_ta_option += 1 
+                return 
+            
             if self.highlighted[1] == 800:
                 self.highlighted[1] = 800
                 return 
@@ -113,6 +144,9 @@ class Observing(Gamestate):
                 return  
 
         if keys[pygame.K_RIGHT]:
+            if self.deciding_tile_action == True:
+                return 
+            
             if self.highlighted[0] == 1200:
                 self.highlighted[0] = 1200 
                 return 
@@ -121,6 +155,9 @@ class Observing(Gamestate):
                 return 
 
         if keys[pygame.K_LEFT]:
+            if self.deciding_tile_action == True:
+                return 
+            
             if self.highlighted[0] == 0:
                 self.highlighted[0] = 0
                 return 
@@ -190,10 +227,23 @@ class Observing(Gamestate):
             self.target_start[0] = 0 
             self.target_start[1] = 0 
             self.quick_status_override = False 
+            self.deciding_tile_action = False 
             pass
 
 
         if keys[pygame.K_RETURN]:
+
+            if self.deciding_tile_action == True:
+                self.special_status_message = self.action_list[self.selected_ta_option]
+                #TIME TO WRITE THE TAKEACTION() FUNCTION -- in universe? on tile? elsewhere? 
+                if self.this_tile != None:
+                    self.this_tile.takeAction(self.action_list[self.selected_ta_option], self.this_person_on_tile)
+                else:
+                    return 
+
+                return  
+
+
 
             absolute_x = math.floor((self.camera[0] + self.highlighted[0]) / 50) 
             absolute_y = math.floor((self.camera[2] + self.highlighted[1]) / 50)
@@ -244,7 +294,41 @@ class Observing(Gamestate):
                 self.targeted_person = None 
                 pass 
 
-        
+        if keys[pygame.K_t]:
+            absolute_x = math.floor((self.camera[0] + self.highlighted[0]) / 50) 
+            absolute_y = math.floor((self.camera[2] + self.highlighted[1]) / 50)
+            # absolute_x = math.floor((self.camera[0]) / 50) 
+            # absolute_y = math.floor((self.camera[1]) / 50)
+            if absolute_x >= 100:
+                absolute_x = 100
+
+            if absolute_y >= 100:
+                absolute_y = 100
+            
+
+            self.highlight_fill_color = "Red"
+            
+            self.this_tile = self.gameboard.board[absolute_x][absolute_y]
+
+            if self.this_tile.stood_on == True:
+                self.deciding_tile_action = True 
+                self.this_person_on_tile = self.this_tile.stood_on_by 
+                local_actions = self.this_tile.getTileActions(self.this_person_on_tile)
+                self.quick_status_override = True 
+                self.special_status_message = "Select Tile Action\nSHIFT to cancel"
+
+
+                for i in range(len(local_actions)):
+                    self.action_list[i] = local_actions[i]
+                    #print("added " +local_actions[i])
+            else:
+                self.quick_status_override = True 
+                self.special_status_message = "No One Is Here\nSHIFT to cancel"
+
+            #print(this_tile.tile_actions)
+            #print(local_actions)
+           # print(self.action_list)
+
         if keys[pygame.K_p]:
             self.transition_state = GamestateIs.PEOPLE
             return 
@@ -463,6 +547,106 @@ class Observing(Gamestate):
             display_surface.blit(highlight_px, (self.highlighted[0]+l, self.highlighted[1]+50))
 
         ## =========================================== ## 
+
+
+        ## =========== TILE ACTION NONSENSE ========== ## 
+        if self.deciding_tile_action == True:
+            box_spawn_x = self.highlighted[0] + 100  
+            box_spawn_y = self.highlighted[1] - 100 
+
+            if box_spawn_y > 500:
+                box_spawn_y = 500 
+            elif box_spawn_y <= 100:
+                box_spawn_y = 200 
+            
+            if box_spawn_x > 1000:
+                box_spawn_x = 800
+
+
+            tile_choices_canvas = pygame.Surface((250, 300))
+            tile_choices_canvas.fill("Tan")
+            top_prompt_title = "AVAILABLE ACTIONS:"
+            
+
+
+
+            left_and_right = "<               >"
+            
+            tpt_surface = observing_font.render(top_prompt_title, False, "Black")
+            lar_surface = observing_font.render(left_and_right, False, "Black")
+            
+            option_one = "---"
+            option_two = "---"
+            option_three = "---"
+            option_four = "---"
+            option_five = "---"
+
+            if self.action_list[0] != None:
+               option_one = "> " +str(self.action_list[0])
+
+            if self.action_list[1] != None:
+               option_two = "> " + str(self.action_list[1])
+
+            if self.action_list[2] != None:
+               option_three = "> " + str(self.action_list[2])
+
+            if self.action_list[3] != None:
+               option_four = "> " + str(self.action_list[3])
+
+            if self.action_list[4] != None:
+               option_five = "> " +  str(self.action_list[4])
+
+            if self.selected_ta_option == 0:
+               opone_surface = observing_font.render(option_one, False, "White")
+            else:
+               opone_surface = observing_font.render(option_one, False, "Black")
+
+
+            if self.selected_ta_option == 1:
+                optwo_surface = observing_font.render(option_two, False, "White")
+            else:
+                optwo_surface = observing_font.render(option_two, False, "Black")
+
+            if self.selected_ta_option == 2:
+                opthree_surface = observing_font.render(option_three, False, "White")
+            else:
+                opthree_surface = observing_font.render(option_three, False, "Black")
+
+            if self.selected_ta_option == 3:
+                opfour_surface = observing_font.render(option_four, False, "White")
+            else:
+                opfour_surface = observing_font.render(option_four, False, "Black")
+
+            if self.selected_ta_option == 4:
+                opfive_surface = observing_font.render(option_five, False, "White")
+            else:
+                opfive_surface = observing_font.render(option_five, False, "Black") 
+
+            
+
+            tile_choices_canvas.blit(tpt_surface, (0,0))
+            tile_choices_canvas.blit(opone_surface, (0, 25))
+            tile_choices_canvas.blit(optwo_surface, (0, 50))
+            tile_choices_canvas.blit(opthree_surface, (0, 75))
+            tile_choices_canvas.blit(opfour_surface, (0, 100))
+            tile_choices_canvas.blit(opfive_surface, (0, 125))
+            tile_choices_canvas.blit(lar_surface, (50, 285))
+
+
+            display_surface.blit(tile_choices_canvas, (box_spawn_x, box_spawn_y))
+
+
+
+
+
+        else:
+            pass 
+
+
+        ## =========================================== ## 
+
+
+
 
         # ============= PUTTING IT ALL TOGETHER =================================
         if self.ui_on == True:
