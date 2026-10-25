@@ -46,6 +46,7 @@ class Game:
         
         Universe.initBuildings()
         Universe.initPersons(100)
+        Universe.initCommunityInventory()
 
         GAMEBOARD = Gameboard()
         # for j in range(100):
@@ -111,17 +112,30 @@ class Game:
 
                     #WALKING SOMEWHERE EACH HOUR 
                     if self.TimeSys.getHours() > self.latest_hour:
+                        if self.TimeSys.getHours() == 23:
+                            self.latest_hour = 0
+                            pass
+
                         for person in Universe.persons_dict.keys():
                             peep = Universe.persons_dict[person]
-                            if peep.currently_delegated == True:
+                            if peep.currently_delegated_towalk == True:
                                 peep.continue_guided_walk(GAMEBOARD)
                             else:
                                 peep.random_walk(GAMEBOARD)
                             
+
+                        for person in Universe.persons_dict.keys():
+                            peep = Universe.persons_dict[person]
+                            if peep.currently_delegated_toact == True:
+                                peep.takingAction()
+                            else:
+                                pass  
+
+                        for tile in GAMEBOARD.board:
+
+                            print(tile)
+
                         self.latest_hour = self.TimeSys.getHours()
-
-
-
 
                     self.current_gamestate = OBSERVING.getInternalState()
                     pass

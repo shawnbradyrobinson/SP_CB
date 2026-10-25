@@ -4,7 +4,7 @@
 
 class Inventory:
     def __init__(self):
-        items = {
+        self.items = {
             "healthcare": {
                 "vapor_rubs": 0,
                 "sticky_aids": 0, 
@@ -53,6 +53,13 @@ class Inventory:
                 "geometry_textbook": 0,
                 "history_textbook": 0,
 
+            },
+
+            "tools": {
+                "standard_axe": 0,
+                "standard_hammer": 0,
+                "standard_fishing_rod": 0,
+
             }
         }
     
@@ -69,4 +76,9 @@ class Inventory:
         pass
 
     def trulyRandomPreset(self):
+        pass 
+
+    def returnInventory(self) -> dict:
+        return self.items
+        
         pass 
